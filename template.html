@@ -1,0 +1,61 @@
+<html>
+<head>
+  <title>Art / Dev - Motion 2</title>
+  <script src="p5.min.js"></script>
+  <script>
+  var particleCount = 300;
+  var particles = [];
+  var particleCounter = 0;
+  var wind1 = 0;
+  var wind2 = 0;
+  var wind3 = 0;
+
+  function setup() {
+    createCanvas(document.body.offsetWidth, document.body.offsetHeight, WEBGL);
+    perspective(60 / 180 * PI, width/height, 0.1, 100);
+    colorMode(HSB,1)
+  }
+
+  function draw() {
+
+    background(.1);
+    orbitControl();
+    camera(0,0,500)
+    var offset = 40;
+    var Nx = 50;
+    var Ny = 15;
+    var Nz = 10;
+    var offsetRow = true;
+    for(var i = 0; i <= 1; i+=1/(Nx-1)) {
+      offsetRow = !offsetRow;
+      for(var j = 0; j <= 1; j+=1/(Ny-1)) {
+        for(var k= 0; k <= 1; k+=1/(Nz-1)) {
+          var n1 = noise(i + wind1,j,k, .1*wind2);
+          var n2 = noise(.2*i,.2*j + wind2,.2*k);
+          var n3 = noise(i,j,k+wind3);
+          var luma = round(pow(n1,1.4))
+          basicMaterial(n2,n3,luma, luma)
+          push();
+          translate(
+            (i-.5)*Nx*offset,
+            (j-.5)*Ny*offset + (offsetRow ? offset/2 : 0),
+            (k-.5)*Nz*offset + (offsetRow ? offset/2 : 0));
+          sphere(3);
+          pop();
+        }
+      }
+    }
+    wind1 += -.06
+    wind2 += -.02
+    wind3 += -.1
+  }
+
+  </script>
+  <style>
+    body { padding: 0; margin:0; background-color: #333;}
+    canvas { margin: 0 auto; display:block; }
+  </style>
+</head>
+<body>
+</body>
+</html>
